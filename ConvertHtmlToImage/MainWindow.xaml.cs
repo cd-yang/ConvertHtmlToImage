@@ -1,7 +1,10 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TheArtOfDev.HtmlRenderer.Core;
 using TheArtOfDev.HtmlRenderer.WPF;
+using TheArtOfDev.HtmlRenderer.WPF.Adapters;
 
 namespace ConvertHtmlToImage
 {
@@ -14,30 +17,45 @@ namespace ConvertHtmlToImage
         {
             InitializeComponent();
 
+            var style = @"
+table
+{
+  min-width: 100%;
+}
+
+table td
+{
+  border: 1px solid silver;
+  position: relative;
+}
+
+.crossed
+{
+   background-image: linear-gradient(to bottom left,  transparent calc(50% - 1px), red, transparent calc(50% + 1px)); 
+}
+
+.colHeader
+{
+	text-align: right;
+}
+";
+
             var _html = @"
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
 
 <table>
   <tr>
-    <th>Company</th>
-    <th>Contact</th>
-    <th>Country</th>
+    <td class=""crossed"">
+        <div class=""colHeader"">Company</div>
+		<div>Company</div>
+	</td>
+    <td>Contact</td>
+    <td>Country</td>
   </tr>
   <tr>
     <td>Alfreds Futterkiste</td>
@@ -71,10 +89,15 @@ tr:nth-child(even) {
   </tr>
 </table>
 
+</body>
+</html>
 ";
             var filePath = @"C:\Test.png";
 
-            var img = HtmlRender.RenderToImage(_html, new System.Windows.Size(400, 400));
+            var cssData = HtmlRender.ParseStyleSheet(style);
+
+            var img = HtmlRender.RenderToImage(_html, new Size(200, 200), new Size(999999, 999999), cssData: cssData, backgroundColor: Color.FromRgb(122,122,122));
+            
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var encoder = new PngBitmapEncoder();
