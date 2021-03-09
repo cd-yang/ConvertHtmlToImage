@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:ConvertHtmlToImage"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <StackPanel>
+        <Button Click="Button1_Click">Convert html string to image</Button>
+        <Button Click="Button2_Click">Render wpf control in background and export to image</Button>
+        <Button Click="Button2_Click">Render wpf control in background and export to image</Button>
+    </StackPanel>
 </Window>
